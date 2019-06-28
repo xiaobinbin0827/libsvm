@@ -1,5 +1,4 @@
-----------------------------------
---- Python interface of LIBSVM ---
+# Python interface of LIBSVM 
 ----------------------------------
 
 Table of Contents
@@ -45,53 +44,53 @@ Quick Start
 There are two levels of usage. The high-level one uses utility functions
 in svmutil.py and the usage is the same as the LIBSVM MATLAB interface.
 
->>> from svmutil import *
+> from svmutil import *
 # Read data in LIBSVM format
->>> y, x = svm_read_problem('../heart_scale')
->>> m = svm_train(y[:200], x[:200], '-c 4')
->>> p_label, p_acc, p_val = svm_predict(y[200:], x[200:], m)
+> y, x = svm_read_problem('../heart_scale')
+> m = svm_train(y[:200], x[:200], '-c 4')
+> p_label, p_acc, p_val = svm_predict(y[200:], x[200:], m)
 
 # Construct problem in python format
 # Dense data
->>> y, x = [1,-1], [[1,0,1], [-1,0,-1]]
+> y, x = [1,-1], [[1,0,1], [-1,0,-1]]
 # Sparse data
->>> y, x = [1,-1], [{1:1, 3:1}, {1:-1,3:-1}]
->>> prob  = svm_problem(y, x)
->>> param = svm_parameter('-t 0 -c 4 -b 1')
->>> m = svm_train(prob, param)
+> y, x = [1,-1], [{1:1, 3:1}, {1:-1,3:-1}]
+> prob  = svm_problem(y, x)
+> param = svm_parameter('-t 0 -c 4 -b 1')
+> m = svm_train(prob, param)
 
 # Precomputed kernel data (-t 4)
 # Dense data
->>> y, x = [1,-1], [[1, 2, -2], [2, -2, 2]]
+> y, x = [1,-1], [[1, 2, -2], [2, -2, 2]]
 # Sparse data
->>> y, x = [1,-1], [{0:1, 1:2, 2:-2}, {0:2, 1:-2, 2:2}]
+> y, x = [1,-1], [{0:1, 1:2, 2:-2}, {0:2, 1:-2, 2:2}]
 # isKernel=True must be set for precomputed kernel
->>> prob  = svm_problem(y, x, isKernel=True)
->>> param = svm_parameter('-t 4 -c 4 -b 1')
->>> m = svm_train(prob, param)
+> prob  = svm_problem(y, x, isKernel=True)
+> param = svm_parameter('-t 4 -c 4 -b 1')
+> m = svm_train(prob, param)
 # For the format of precomputed kernel, please read LIBSVM README.
 
 
 # Other utility functions
->>> svm_save_model('heart_scale.model', m)
->>> m = svm_load_model('heart_scale.model')
->>> p_label, p_acc, p_val = svm_predict(y, x, m, '-b 1')
->>> ACC, MSE, SCC = evaluations(y, p_label)
+> svm_save_model('heart_scale.model', m)
+> m = svm_load_model('heart_scale.model')
+> p_label, p_acc, p_val = svm_predict(y, x, m, '-b 1')
+> ACC, MSE, SCC = evaluations(y, p_label)
 
 # Getting online help
->>> help(svm_train)
+> help(svm_train)
 
 The low-level use directly calls C interfaces imported by svm.py. Note that
 all arguments and return values are in ctypes format. You need to handle them
 carefully.
 
->>> from svm import *
->>> prob = svm_problem([1,-1], [{1:1, 3:1}, {1:-1,3:-1}])
->>> param = svm_parameter('-c 4')
->>> m = libsvm.svm_train(prob, param) # m is a ctype pointer to an svm_model
+> from svm import *
+> prob = svm_problem([1,-1], [{1:1, 3:1}, {1:-1,3:-1}])
+> param = svm_parameter('-c 4')
+> m = libsvm.svm_train(prob, param) # m is a ctype pointer to an svm_model
 # Convert a Python-format instance to svm_nodearray, a ctypes structure
->>> x0, max_idx = gen_svm_nodearray({1:1, 3:1})
->>> label = libsvm.svm_predict(m, x0)
+> x0, max_idx = gen_svm_nodearray({1:1, 3:1})
+> label = libsvm.svm_predict(m, x0)
 
 Design Description
 ==================
@@ -121,7 +120,7 @@ fields and methods.
 Before using the data structures, execute the following command to load the
 LIBSVM shared library:
 
-    >>> from svm import *
+    > from svm import *
 
 - class svm_node:
 
@@ -135,13 +134,13 @@ LIBSVM shared library:
 
     Show the index and the value of a node.
 
-    >>> print(node) 
+    > print(node) 
 
 - Function: gen_svm_nodearray(xi [,feature_max=None [,isKernel=False]])
 
     Generate a feature vector from a Python list/tuple or a dictionary:
 
-    >>> xi, max_idx = gen_svm_nodearray({1:1, 3:1, 5:-2})
+    > xi, max_idx = gen_svm_nodearray({1:1, 3:1, 5:-2})
 
     xi: the returned svm_nodearray (a ctypes structure)
 
@@ -158,7 +157,7 @@ LIBSVM shared library:
 
     Construct an svm_problem instance
 
-    >>> prob = svm_problem(y, x)
+    > prob = svm_problem(y, x)
 
     y: a Python list/tuple of l labels (type must be int/double).
 
@@ -170,7 +169,7 @@ LIBSVM shared library:
 
     For pre-computed kernel, the isKernel flag should be set to True:
 
-    >>> prob = svm_problem(y, x, isKernel=True)
+    > prob = svm_problem(y, x, isKernel=True)
 
     Please read LIBSVM README for more details of pre-computed kernel.
 
@@ -178,28 +177,28 @@ LIBSVM shared library:
 
     Construct an svm_parameter instance
 
-    >>> param = svm_parameter('training_options')
+    > param = svm_parameter('training_options')
 
     If 'training_options' is empty, LIBSVM default values are applied.
 
     Set param to LIBSVM default values.
 
-    >>> param.set_to_default_values()
+    > param.set_to_default_values()
 
     Parse a string of options.
 
-    >>> param.parse_options('training_options')
+    > param.parse_options('training_options')
 
     Show values of parameters.
 
-    >>> print(param)
+    > print(param)
 
 - class svm_model:
 
     There are two ways to obtain an instance of svm_model:
 
-    >>> model = svm_train(y, x)
-    >>> model = svm_load_model('model_file_name')
+    > model = svm_train(y, x)
+    > model = svm_load_model('model_file_name')
 
     Note that the returned structure of interface functions
     libsvm.svm_train and libsvm.svm_load_model is a ctypes pointer of
@@ -207,8 +206,8 @@ LIBSVM shared library:
     by svm_train and svm_load_model in svmutil.py. We provide a
     function toPyModel for the conversion:
 
-    >>> model_ptr = libsvm.svm_train(prob, param)
-    >>> model = toPyModel(model_ptr)
+    > model_ptr = libsvm.svm_train(prob, param)
+    > model = toPyModel(model_ptr)
 
     If you obtain a model in a way other than the above approaches,
     handle it carefully to avoid memory leak or segmentation fault.
@@ -216,22 +215,22 @@ LIBSVM shared library:
     Some interface functions to access LIBSVM models are wrapped as
     members of the class svm_model:
 
-    >>> svm_type = model.get_svm_type()
-    >>> nr_class = model.get_nr_class()
-    >>> svr_probability = model.get_svr_probability()
-    >>> class_labels = model.get_labels()
-    >>> sv_indices = model.get_sv_indices()
-    >>> nr_sv = model.get_nr_sv()
-    >>> is_prob_model = model.is_probability_model()
-    >>> support_vector_coefficients = model.get_sv_coef()
-    >>> support_vectors = model.get_SV() 
+    > svm_type = model.get_svm_type()
+    > nr_class = model.get_nr_class()
+    > svr_probability = model.get_svr_probability()
+    > class_labels = model.get_labels()
+    > sv_indices = model.get_sv_indices()
+    > nr_sv = model.get_nr_sv()
+    > is_prob_model = model.is_probability_model()
+    > support_vector_coefficients = model.get_sv_coef()
+    > support_vectors = model.get_SV() 
 
 Utility Functions
 =================
 
 To use utility functions, type
 
-    >>> from svmutil import *
+    > from svmutil import *
 
 The above command loads
     svm_train()        : train an SVM model
@@ -245,9 +244,9 @@ The above command loads
 
     There are three ways to call svm_train()
 
-    >>> model = svm_train(y, x [, 'training_options'])
-    >>> model = svm_train(prob [, 'training_options'])
-    >>> model = svm_train(prob, param)
+    > model = svm_train(y, x [, 'training_options'])
+    > model = svm_train(prob [, 'training_options'])
+    > model = svm_train(prob, param)
 
     y: a list/tuple of l training labels (type must be int/double).
 
@@ -275,13 +274,13 @@ The above command loads
 
     Examples:
 
-    >>> y, x = svm_read_problem('../heart_scale')
-    >>> prob = svm_problem(y, x)
-    >>> param = svm_parameter('-s 3 -c 5 -h 0')
-    >>> m = svm_train(y, x, '-c 5')
-    >>> m = svm_train(prob, '-t 2 -c 5')
-    >>> m = svm_train(prob, param)
-    >>> CV_ACC = svm_train(y, x, '-v 3')
+    > y, x = svm_read_problem('../heart_scale')
+    > prob = svm_problem(y, x)
+    > param = svm_parameter('-s 3 -c 5 -h 0')
+    > m = svm_train(y, x, '-c 5')
+    > m = svm_train(prob, '-t 2 -c 5')
+    > m = svm_train(prob, param)
+    > CV_ACC = svm_train(y, x, '-v 3')
 
 - Function: svm_predict
 
@@ -320,16 +319,16 @@ The above command loads
 
     Example:
 
-    >>> m = svm_train(y, x, '-c 5')
-    >>> p_labels, p_acc, p_vals = svm_predict(y, x, m)
+    > m = svm_train(y, x, '-c 5')
+    > p_labels, p_acc, p_vals = svm_predict(y, x, m)
 
 - Functions:  svm_read_problem/svm_load_model/svm_save_model
 
     See the usage by examples:
 
-    >>> y, x = svm_read_problem('data.txt')
-    >>> m = svm_load_model('model_file')
-    >>> svm_save_model('model_file', m)
+    > y, x = svm_read_problem('data.txt')
+    > m = svm_load_model('model_file')
+    > svm_save_model('model_file', m)
 
 - Function: evaluations
 
