@@ -3,7 +3,7 @@
 ----------------------------------
 
 Table of Contents
-=================
+====
 
 - Introduction
 - Installation
